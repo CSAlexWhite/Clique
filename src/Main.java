@@ -24,51 +24,8 @@ public class Main {
 
     public static void main(String[] args) {
 
-        Integer n = 12;
-        int k = 5;
-        String padding = "%0" + Integer.toString(n) + "d";
 
-        for(int i=0; i<10; i++){
-
-            System.out.println(generateCombination(n, k, padding));
-        }
     }
-
-    private static String generateCombination(int n, int k, String padding){
-
-        StringBuilder combination = new StringBuilder(String.format(padding, 0)); // create a bitstring with n zerosSystem.outl.print
-
-        int position, count = 0;
-        while(count < k || numberChosen(combination.toString()) < k){
-
-            position = randomInt(0, n-1);
-            combination.setCharAt(position, '1');
-            count++;
-        }
-
-        return combination.toString();
-    }
-
-    private static int numberChosen(String input){
-
-        int count = 0;
-        for(int i=0; i<input.length(); i++){
-
-            if(input.charAt(i) == '1') count++;
-        }
-
-        return count;
-    }
-
-    private static int randomInt(int min, int max) {
-
-        Random rand = new Random(System.currentTimeMillis());
-        int randomNum = rand.nextInt((max - min) + 1) + min;
-
-        return randomNum;
-    }
-
-
 
     /**
      * Returns a vector of all numbers whose bitstring representation are of length n and include exactly k ones.  To be
