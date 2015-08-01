@@ -12,8 +12,8 @@ public class Chromosome {
 
     public Chromosome(int n, int k, Graph parent){
 
-        genotype = generateCombination(n, k);
-        connections = getConnections();
+        genotype = randomize(n, k);
+        connections = countEdges();
         this.parent = parent;
         fitness = getFitness(k);
     }
@@ -22,7 +22,7 @@ public class Chromosome {
      * counts the connections between the nodes of the graph encoded by this individual
      * @return
      */
-    private int getConnections() {
+    private int countEdges() {
 
         int count = 0;
         for(int i = 0; i < genotype.length(); i++){
@@ -46,12 +46,29 @@ public class Chromosome {
      */
     public double getFitness(int k){
 
-        return getConnections() / ((k * (k - 1)) / 2);
+        return connections / ((k * (k - 1)) / 2);
     }
 
     public void print(){
 
         System.out.println(genotype);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Integer.parseInt(genotype, 2);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+
+        if(!(obj instanceof Chromosome)) return false;
+        if(obj == this) return true;
+
+        if(this.genotype.equals(((Chromosome)obj).genotype)) return true;
+
+        return false;
     }
 
     /**
@@ -60,7 +77,7 @@ public class Chromosome {
      * @param k number of bits to flip
      * @return
      */
-    private static String generateCombination(int n, int k){
+    private static String randomize(int n, int k){
 
         String padding = "%0" + Integer.toString(n) + "d";
         StringBuilder combination = new StringBuilder(String.format(padding, 0)); // create a bitstring with n zeros
