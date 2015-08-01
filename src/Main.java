@@ -2,7 +2,7 @@ import java.util.Vector;
 
 public class Main {
 
-    /* ALGORITHM
+    /*
     * I.    READ IN PROBLEM FILE: ADJACENCY LIST, NUMBER k
     * II.   READ IN PARAMETER FILE  - POPULATION SIZE
     *                               - # GENERATIONS n
@@ -23,37 +23,58 @@ public class Main {
 
     public static void main(String[] args) {
 
+        Integer n = 5;
+        int k = 3;
 
+        String padding = "%0" + Integer.toString(n) + "d";
+
+        Vector<String> test = getCombinations(5, 3, padding);
+        printCombinations(test);
     }
 
     /**
      * Returns a vector of all numbers whose bitstring representation are of length n and include exactly k ones.  To be
-     * used in generating subsets of size k from the overall graph of size n.
+     * used in generating subsets of size k from the overall graph of size n.  (Credit http://bit.ly/1IzQjj9)
      * @param n
      * @param k
      * @return
      */
-    private Vector<Integer> getCombinations(int n, int k){
+    private static Vector<String> getCombinations(int n, int k, String p){
 
-        Vector<Integer> returnValue = new Vector<Integer>();
+        Vector<String> combinations = new Vector<String>();
 
         int x = (int)(Math.pow(2, k) - 1);  // initialize x
         int count = 1;// x is the first combination
         int u = 0, v = 0, y = 0;
-        while(count < combinations(n, k)){
+        while(count <= combinations(n, k)){
 
+            combinations.add(String.format(p, Integer.parseInt(Integer.toBinaryString(x))));
 
+            u = x & -x;
+            v = x + u;
+            y = v + (((v^x)/u)>>2);
+            x = y;
+
+            count++;
         }
 
-        return returnValue;
+        return combinations;
     }
 
-    private int combinations(int n, int k){
+    private static void printCombinations(Vector<String> vector){
+
+        for(int i=0; i<vector.size(); i++){
+
+            System.out.println(vector.elementAt(i));
+        }
+    }
+
+    private static int combinations(int n, int k){
 
         return factorial(n)/(factorial(k) * factorial(n - k));
     }
 
-    private int factorial(int n) {
+    private static int factorial(int n) {
 
         int fact = 1;
         for (int i = 1; i <= n; i++) {
