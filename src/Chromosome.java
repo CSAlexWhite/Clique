@@ -1,9 +1,12 @@
 import java.util.Random;
 
 /**
- * Created by Alex on 8/1/2015.
+ * The main feature of a Chromosome is a bitstring of length n with exactly k ones,
+ * which represents a subset of a graph.  Each chromosome contains a pointer to the
+ * parent graph so that it can calculate its fitness.  The fitness is used to sort the
+ * Chromosomes in each Generation.
  */
-public class Chromosome {
+public class Chromosome implements Comparable<Chromosome>{
 
     Graph parent;
     String genotype;
@@ -12,9 +15,9 @@ public class Chromosome {
 
     public Chromosome(int n, int k, Graph parent){
 
+        this.parent = parent;
         genotype = randomize(n, k);
         connections = countEdges();
-        this.parent = parent;
         fitness = getFitness(k);
     }
 
@@ -24,19 +27,29 @@ public class Chromosome {
      */
     private int countEdges() {
 
+        print();
+
         int count = 0;
         for(int i = 0; i < genotype.length(); i++){
 
             if(genotype.charAt(i) == '1'){      // for each node in the chromosome
 
-                for(int j = 0; j < 10; j++){    // count the number of edges
+                for(int j = 0; j < genotype.length(); j++){    // count the number of edges
 
-                    if(genotype.charAt(j) == 1 && parent.matrix[i][j] > 0) count++;
+                    if(genotype.charAt(j) == '1' && parent.matrix[i][j] > 0) {
+
+                        System.out.print("[" + parent.matrix[i][j] + "} ");
+                        count++;
+                    }
+
+                    else System.out.print(parent.matrix[i][j] + "  ");
                 }
+
+                System.out.println();
             }
         }
 
-        return count;
+        return count/2;
     }
 
     /**
@@ -46,12 +59,24 @@ public class Chromosome {
      */
     public double getFitness(int k){
 
-        return connections / ((k * (k - 1)) / 2);
+        double fitness = (double) connections / (double)((k * (k - 1)) / 2);
+        System.out.println("Number of connections is " + connections);
+        System.out.println("Possible connections is " + ((k * (k-1))/2));
+        System.out.println("Fitness is " + fitness);
+        return fitness;
     }
 
     public void print(){
 
         System.out.println(genotype);
+    }
+
+    @Override
+    public int compareTo(Chromosome other) {
+
+        if(other.fitness < this.fitness) return -1;
+        if(other.fitness > this.fitness) return 1;
+        else return 0;
     }
 
     @Override
@@ -62,6 +87,8 @@ public class Chromosome {
 
     @Override
     public boolean equals(Object obj) {
+
+        System.out.println("Testing Equality between " + this + " and " + obj );
 
         if(!(obj instanceof Chromosome)) return false;
         if(obj == this) return true;

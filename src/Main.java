@@ -1,4 +1,3 @@
-import java.util.Random;
 import java.util.Vector;
 
 public class Main {
@@ -24,6 +23,13 @@ public class Main {
 
     public static void main(String[] args) {
 
+        Graph testGraph = new Graph("graph.txt");
+        testGraph.print();
+        Generation testGeneration = new Generation(10, 5, 3, testGraph);
+        testGeneration.print();
+    }
+
+    private static void readParameters(){
 
     }
 
