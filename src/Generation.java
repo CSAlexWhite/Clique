@@ -21,15 +21,18 @@ public class Generation {
         populate();
     }
 
+    public Generation(Generation previous){
+
+        /*SELECTION*/
+
+    }
+
     public void populate(){
 
-        int count = 0;
-        while(count < size){
+        while(set.size() < size){
 
-            System.out.println("____________________\n");
+//            System.out.println("____________________\n");
             set.add(new Chromosome(n, k, parentGraph));
-            System.out.println("Generation size is : " + set.size());
-            count++;
         }
     }
 
@@ -40,12 +43,13 @@ public class Generation {
 
     public void print(){
 
-        System.out.println("Printing");
+        System.out.println("Printing Generation: \n======================");
         Iterator<Chromosome> it = set.iterator();
 
         while(it.hasNext()){
 
-            it.next().print();
+            Chromosome toPrint = it.next();
+            System.out.println(toPrint.genotype + " has fitness " + toPrint.fitness());
         }
     }
 }

@@ -23,9 +23,15 @@ public class Main {
 
     public static void main(String[] args) {
 
+        int n;
+        int k = 3;
+        int generationSize = 8;
+
         Graph testGraph = new Graph("graph.txt");
+        n = testGraph.size;
         testGraph.print();
-        Generation testGeneration = new Generation(10, 5, 3, testGraph);
+        System.out.println();
+        Generation testGeneration = new Generation(generationSize, n, k, testGraph);
         testGeneration.print();
     }
 
