@@ -1,6 +1,7 @@
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Random;
+import java.util.Vector;
 
 /**
  * The main feature of a Chromosome is a bitstring of length n with exactly k ones,
@@ -46,7 +47,7 @@ public class Chromosome implements Comparable<Chromosome>{
      */
     public void mutate(int p){
 
-        StringBuilder tempString = new StringBuilder(genotype);
+        StringBuilder tempString = new StringBuilder(genotype);  //TODO can improve complexity here
 
             char temp1, temp2;
 
@@ -65,9 +66,49 @@ public class Chromosome implements Comparable<Chromosome>{
         genotype = tempString.toString();
     }
 
-    public Chromosome crossover(int rate){
+    /**
+     * Crossover combines two Chromosomes into one.  It finds positions where there are ones in both parents, then
+     * randomly assigns those positions in the child as ones, until there are k of them.  In this way it both combines
+     * the characteristics of the parents and is respectful of the necessary value k
+     * @param mate
+     * @return
+     */
+    public Chromosome crossover(Chromosome mate) throws GAException{
 
-        return new Chromosome(genotype, n, k, parent);
+        if(k != mate.k) throw new GAException("Chromosomes differ in length");
+
+        Vector<Integer> bitPositions = new Vector<Integer>();
+
+        String padding = "%0" + Integer.toString(n) + "d";
+        StringBuilder combination = new StringBuilder(String.format(padding, 0)); // create a bitstring with n zeros
+
+        System.out.println("This chromosome:");
+        print();
+        System.out.println("That chromosome:");
+        mate.print();
+
+        System.out.print("Ones at positions:");
+        for(int i = 0; i < length; i++){
+
+            if(this.genotype.charAt(i) == '1' || mate.genotype.charAt(i) == '1'){
+                bitPositions.add(i);
+                System.out.print(i);
+            }
+        }
+
+        System.out.println();
+
+        int i, position, count = 0;
+        while(count < k || numberChosen(combination.toString()) < k){
+
+            i = randomInt(0, bitPositions.size()-1);
+            position = bitPositions.elementAt(i);
+            combination.setCharAt(position, '1');
+            bitPositions.remove(i);
+            count++;
+        }
+
+        return new Chromosome(combination.toString(), n, k, parent);
     }
 
     public String fitness(){

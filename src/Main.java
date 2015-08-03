@@ -36,10 +36,17 @@ public class Main {
 
         System.out.println("-------------------------------\n");
 
-        Chromosome testChromosome = new Chromosome(n, k, testGraph);
-        testChromosome.print();
-        testChromosome.mutate(50);
-        testChromosome.print();
+        Chromosome testChromosome1 = new Chromosome(n, k, testGraph);
+        Chromosome testChromosome2 = new Chromosome(n, k, testGraph);
+
+        try{
+            Chromosome testChromosome3 = testChromosome1.crossover(testChromosome2);
+            testChromosome3.print();
+        }
+        catch(GAException gae){
+
+            gae.printStackTrace();
+        }
     }
 
     private static void readParameters(){
