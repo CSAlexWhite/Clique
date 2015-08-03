@@ -36,32 +36,63 @@ public class Chromosome implements Comparable<Chromosome>{
         fitness = getFitness(k);
     }
 
-    public Chromosome mutate(int rate){
+    /**
+     * If type 1: Performs an mutation which chooses a random spot with probability p, then switches the sides of the
+     * genotype across that point.
+     * If type 2: Iterates through the string and switches neighboring bits with probability p
+     * @param p the mutation rate
+     * @return
+     */
+    public Chromosome mutate(int type, int p){
 
-        StringBuilder temp = new StringBuilder(genotype);
+        StringBuilder tempString = new StringBuilder(genotype);
 
-        int flips = 0;
-        for(int i=0; i<temp.length(); i++){
+        if(type == 1){
 
-            if(randomInt(0, 100) > rate){
+            char temp1, temp2;
 
-                if(temp.charAt(i) == '0') {
+            for(int i = 0; i<genotype.length() - 1; i++){
 
-                    flips++;
-                    temp.setCharAt(i, '1');
-                }
+                if(randomInt(0, 100) < p){
 
-                if(temp.charAt(i) == '1') {
+                    System.out.println("I'm in here");
 
-                    flips--;
-                    temp.setCharAt(i, '0');
+                    temp1 = tempString.charAt(i);
+                    temp2 = tempString.charAt(i+1);
+
+                    tempString.setCharAt(i, temp2);
+                    tempString.setCharAt(i+1, temp1);
                 }
             }
+
+            System.out.println("New chromosome1 = " + tempString);
         }
 
-        if(flips != 0) return mutate(rate);
 
-        return new Chromosome(temp.toString(), n, k, parent);
+        if(type == 2){
+
+            if(randomInt(0, 100) < p){
+
+                System.out.println("I'm in here");
+
+                int spot = randomInt(0, n-1);
+
+                for(int i = spot; i < n-1; i++)
+                    tempString.append(genotype.charAt(i));
+
+                for(int i = 0; i < spot - 1; i++)
+                    tempString.append(genotype.charAt(i));
+            }
+
+            System.out.println("New chromosome2 = " + tempString);
+        }
+
+        return new Chromosome(tempString.toString(), n, k, parent);
+    }
+
+    public Chromosome crossover(int rate){
+
+        return new Chromosome(genotype, n, k, parent);
     }
 
     public String fitness(){

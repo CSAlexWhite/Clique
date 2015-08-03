@@ -33,6 +33,15 @@ public class Main {
         System.out.println();
         Generation testGeneration = new Generation(generationSize, n, k, testGraph);
         testGeneration.print();
+
+        System.out.println("-------------------------------\n");
+
+        Chromosome testChromosome = new Chromosome(n, k, testGraph);
+        testChromosome.print();
+        testChromosome.mutate(1, 100);
+        testChromosome.print();
+        testChromosome.mutate(2, 100);
+        testChromosome.print();
     }
 
     private static void readParameters(){
