@@ -38,9 +38,7 @@ public class Main {
 
         Chromosome testChromosome = new Chromosome(n, k, testGraph);
         testChromosome.print();
-        testChromosome.mutate(1, 100);
-        testChromosome.print();
-        testChromosome.mutate(2, 100);
+        testChromosome.mutate(50);
         testChromosome.print();
     }
 

@@ -12,6 +12,7 @@ public class Chromosome implements Comparable<Chromosome>{
 
     Graph parent;
     String genotype;
+    int length;
     int connections;
     int n, k;
     double fitness;
@@ -22,6 +23,7 @@ public class Chromosome implements Comparable<Chromosome>{
         this.k = k;
         this.parent = parent;
         this.genotype = genotype;
+        this.length = genotype.length();
         connections = countEdges();
         fitness = getFitness(k);
     }
@@ -32,62 +34,35 @@ public class Chromosome implements Comparable<Chromosome>{
         this.k = k;
         this.parent = parent;
         genotype = randomize(n, k);
+        this.length = genotype.length();
         connections = countEdges();
         fitness = getFitness(k);
     }
 
     /**
-     * If type 1: Performs an mutation which chooses a random spot with probability p, then switches the sides of the
-     * genotype across that point.
-     * If type 2: Iterates through the string and switches neighboring bits with probability p
+     * If type 1: Iterates through the string and switches neighboring bits with probability p
      * @param p the mutation rate
      * @return
      */
-    public Chromosome mutate(int type, int p){
+    public void mutate(int p){
 
         StringBuilder tempString = new StringBuilder(genotype);
 
-        if(type == 1){
-
             char temp1, temp2;
 
-            for(int i = 0; i<genotype.length() - 1; i++){
+            for(int i = 0; i<length; i++){
 
                 if(randomInt(0, 100) < p){
 
-                    System.out.println("I'm in here");
-
                     temp1 = tempString.charAt(i);
-                    temp2 = tempString.charAt(i+1);
+                    temp2 = tempString.charAt((i+1)%length);
 
                     tempString.setCharAt(i, temp2);
-                    tempString.setCharAt(i+1, temp1);
+                    tempString.setCharAt((i+1)%length, temp1);
                 }
             }
 
-            System.out.println("New chromosome1 = " + tempString);
-        }
-
-
-        if(type == 2){
-
-            if(randomInt(0, 100) < p){
-
-                System.out.println("I'm in here");
-
-                int spot = randomInt(0, n-1);
-
-                for(int i = spot; i < n-1; i++)
-                    tempString.append(genotype.charAt(i));
-
-                for(int i = 0; i < spot - 1; i++)
-                    tempString.append(genotype.charAt(i));
-            }
-
-            System.out.println("New chromosome2 = " + tempString);
-        }
-
-        return new Chromosome(tempString.toString(), n, k, parent);
+        genotype = tempString.toString();
     }
 
     public Chromosome crossover(int rate){
