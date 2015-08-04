@@ -1,3 +1,4 @@
+import java.util.Date;
 import java.util.Vector;
 
 public class Main {
@@ -25,27 +26,28 @@ public class Main {
 
         int n;
         int k = 3;
-        int generationSize = 8;
+        int generationSize = 10;
 
-        Graph testGraph = new Graph("graph.txt");
+        Graph testGraph = new Graph("Graph1.txt");
         n = testGraph.size;
         testGraph.print();
         System.out.println();
-        Generation testGeneration = new Generation(generationSize, n, k, testGraph);
-        testGeneration.print();
+        Generation start = new Generation(generationSize, n, k, testGraph);
 
-        System.out.println("-------------------------------\n");
+        System.out.println("==================================");
+        System.out.println("Generation 0 at " + new Date(System.currentTimeMillis()));
+        System.out.println("Average Fitness: " + start.calculateStatistics());
+        System.out.print("Best Chromosome: " + start.best.genotype);
+        System.out.println(" having fitness: " + start.best.fitness());
+        Generation next = new Generation(start, 100, 100);
+        for(int i = 1; i < 100; i++){
 
-        Chromosome testChromosome1 = new Chromosome(n, k, testGraph);
-        Chromosome testChromosome2 = new Chromosome(n, k, testGraph);
-
-        try{
-            Chromosome testChromosome3 = testChromosome1.crossover(testChromosome2);
-            testChromosome3.print();
-        }
-        catch(GAException gae){
-
-            gae.printStackTrace();
+            System.out.println("==================================");
+            System.out.println("Generation " + i + " at " + new Date(System.currentTimeMillis()));
+            next = new Generation(next, 3, 1);
+            System.out.println("Average Fitness: " + next.calculateStatistics());
+            System.out.print("Best Chromosome: " + next.best.genotype);
+            System.out.println(" having fitness: " + next.best.fitness());
         }
     }
 

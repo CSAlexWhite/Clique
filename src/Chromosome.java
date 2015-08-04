@@ -17,9 +17,11 @@ public class Chromosome implements Comparable<Chromosome>{
     int connections;
     int n, k;
     double fitness;
+    Random randNum;
 
     public Chromosome(String genotype, int n, int k, Graph parent){
 
+        randNum = new Random(System.currentTimeMillis());
         this.n = n;
         this.k = k;
         this.parent = parent;
@@ -31,6 +33,7 @@ public class Chromosome implements Comparable<Chromosome>{
 
     public Chromosome(int n, int k, Graph parent){
 
+        randNum = new Random(System.currentTimeMillis());
         this.n = n;
         this.k = k;
         this.parent = parent;
@@ -73,30 +76,21 @@ public class Chromosome implements Comparable<Chromosome>{
      * @param mate
      * @return
      */
-    public Chromosome crossover(Chromosome mate) throws GAException{
+    public Chromosome crossover(Chromosome mate){
 
-        if(k != mate.k) throw new GAException("Chromosomes differ in length");
+        if(mate.equals(this)) return this;
 
         Vector<Integer> bitPositions = new Vector<Integer>();
 
         String padding = "%0" + Integer.toString(n) + "d";
         StringBuilder combination = new StringBuilder(String.format(padding, 0)); // create a bitstring with n zeros
 
-        System.out.println("This chromosome:");
-        print();
-        System.out.println("That chromosome:");
-        mate.print();
-
-        System.out.print("Ones at positions:");
         for(int i = 0; i < length; i++){
 
             if(this.genotype.charAt(i) == '1' || mate.genotype.charAt(i) == '1'){
                 bitPositions.add(i);
-                System.out.print(i);
             }
         }
-
-        System.out.println();
 
         int i, position, count = 0;
         while(count < k || numberChosen(combination.toString()) < k){
@@ -130,13 +124,13 @@ public class Chromosome implements Comparable<Chromosome>{
 
         if(other.genotype.equals(this.genotype)) return 0;
 
-        if(other.fitness < this.fitness) return 1;
-        if(other.fitness > this.fitness) return -1;
+        if(other.fitness < this.fitness) return -1;
+        if(other.fitness > this.fitness) return 1;
 
         if(other.fitness == this.fitness){
 
-            if(Integer.parseInt(other.genotype) < Integer.parseInt(this.genotype)) return 1;
-            if(Integer.parseInt(other.genotype) > Integer.parseInt(this.genotype)) return -1;
+            if(Integer.parseInt(other.genotype, 2) < Integer.parseInt(this.genotype, 2)) return -1;
+            if(Integer.parseInt(other.genotype, 2) > Integer.parseInt(this.genotype, 2)) return 1;
         }
 
         return 0;
@@ -151,7 +145,7 @@ public class Chromosome implements Comparable<Chromosome>{
     @Override
     public boolean equals(Object obj) {
 
-        System.out.println("Testing Equality between " + this + " and " + obj );
+        //System.out.println("Testing Equality between " + this + " and " + obj );
 
         if(!(obj instanceof Chromosome)) return false;
         if(obj == this) return true;
@@ -169,7 +163,7 @@ public class Chromosome implements Comparable<Chromosome>{
      * @param k number of bits to flip
      * @return
      */
-    private static String randomize(int n, int k){
+    private String randomize(int n, int k){
 
         String padding = "%0" + Integer.toString(n) + "d";
         StringBuilder combination = new StringBuilder(String.format(padding, 0)); // create a bitstring with n zeros
@@ -196,10 +190,9 @@ public class Chromosome implements Comparable<Chromosome>{
         return count;
     }
 
-    private static int randomInt(int min, int max) {
+    private int randomInt(int min, int max) {
 
-        Random rand = new Random(System.currentTimeMillis());
-        int randomNum = rand.nextInt((max - min) + 1) + min;
+        int randomNum = randNum.nextInt((max - min) + 1) + min;
 
         return randomNum;
     }

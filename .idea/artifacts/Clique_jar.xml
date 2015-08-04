@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Clique:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Clique_jar</output-path>
+    <root id="archive" name="Clique.jar">
+      <element id="module-output" name="Clique" />
+    </root>
+  </artifact>
+</component>
