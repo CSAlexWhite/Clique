@@ -1,5 +1,5 @@
+import java.io.*;
 import java.util.Date;
-import java.util.Vector;
 
 public class Main {
 
@@ -21,99 +21,89 @@ public class Main {
     *       D. REPLACE CURRENT GENERATION WITH OFFSPRING
     *       E. REPEAT FROM STEP 2 UNTIL CONVERGENCE
     */
+    static int graphSize;
+    static int cliqueSize;
+    static int numGenerations;
+    static int generationSize;
+    static int selectionRate;
+    static int mutationRate;
+    static double fitnessThreshold;
 
     public static void main(String[] args) {
 
-        int n;
-        int k = 11;
-        int numGenerations = 100;
-        int generationSize = 1000;
+        String paramFilename = args[0];
+        String inputFilename = args[1];
+        String outputFilename = args[2];
 
-        int crossoverRate = 3;
-        int MutationRate = 1;
+//        String paramFilename = "params.txt";
+//        String inputFilename = "Graph3.txt";
+//        String outputFilename = "outfile.txt";
 
-        Graph testGraph = new Graph("Graph3.txt");
-        n = testGraph.size;
-        testGraph.print();
-        System.out.println();
-        Generation start = new Generation(generationSize, n, k, testGraph);
+        readParameters(paramFilename);
 
-        System.out.println("==================================");
-        System.out.println("Generation 0 at " + new Date(System.currentTimeMillis()));
-        System.out.println("Average Fitness: " + start.calculateStatistics());
-        System.out.print("Best Chromosome: " + start.best.genotype);
-        System.out.println(" having fitness: " + start.best.fitness());
-        Generation next = new Generation(start, crossoverRate, MutationRate);
+        Graph graph = new Graph(inputFilename);
+        graphSize = graph.size;
+        graph.print();
 
-        //for(int i = 1; i < numGenerations; i++){
-        int i=1;
-        while(next.best.fitness < 1){
+        try{
 
-            System.out.println("==================================");
-            System.out.println("Generation " + i++ + " at " + new Date(System.currentTimeMillis()));
-            next = new Generation(next, crossoverRate, MutationRate);
-            System.out.println("Average Fitness: " + next.calculateStatistics());
-            System.out.print("Best Chromosome: " + next.best.genotype);
-            System.out.println(" having fitness: " + next.best.fitness());
+            PrintWriter newFile = new PrintWriter(outputFilename);
+
+            System.out.println();
+            System.out.println("Graph size is: " + graphSize + " x " + graphSize);
+            System.out.println("Searching for clique of size: " + cliqueSize);
+            System.out.println("Maximum generations will be: " + numGenerations);
+            System.out.println("Generations are of size: " + generationSize);
+            System.out.println("Selection rate set at: " + selectionRate);
+            System.out.println("Mutation rate set at: " + mutationRate);
+            System.out.println("Fitness threshold set at " + fitnessThreshold);
+            System.out.println("Processing...");
+            System.out.println();
+
+            Generation start = new Generation(generationSize, graphSize, cliqueSize, graph);
+            newFile.println("INITIAL GENERATION");
+            newFile.println(start.printStatistics());
+            newFile.println("\n==================================");
+            newFile.println("Generation 1 at " + new Date(System.currentTimeMillis()));
+            Generation next = new Generation(start, selectionRate, mutationRate);
+            newFile.println(next.printStatistics());
+            newFile.print("Best Chromosome: " + start.best.genotype);
+            newFile.println(" having fitness: " + start.best.fitness());
+
+            int i=2;
+            while(next.best.fitness < fitnessThreshold){
+
+                newFile.println("==================================");
+                newFile.println("Generation " + i++ + " at " + new Date(System.currentTimeMillis()));
+                next = new Generation(next, selectionRate, mutationRate);
+                newFile.println(next.printStatistics());
+                newFile.print("Best Chromosome: " + next.best.genotype);
+                newFile.println(" having fitness: " + next.best.fitness());
+            }
+
+            System.out.println("\nFINISHED");
+            System.out.println("See " + outputFilename + " for details");
+            newFile.close();
+        }
+        catch(FileNotFoundException fnfe){ fnfe.printStackTrace();}
+    }
+
+    private static void readParameters(String filename){
+
+        try{
+
+            BufferedReader inFile = new BufferedReader(new FileReader(filename));
+
+            cliqueSize = Integer.parseInt(inFile.readLine());
+            numGenerations = Integer.parseInt(inFile.readLine());
+            generationSize = Integer.parseInt(inFile.readLine());
+            selectionRate = Integer.parseInt(inFile.readLine());
+            mutationRate = Integer.parseInt(inFile.readLine());
+            fitnessThreshold = Double.parseDouble(inFile.readLine());
+            inFile.close();
         }
 
-        System.out.println("FINISHED");
-    }
-
-    private static void readParameters(){
-
-    }
-
-    /**
-     * Returns a vector of all numbers whose bitstring representation are of length n and include exactly k ones.  To be
-     * used in generating subsets of size k from the overall graph of size n.  (Credit http://bit.ly/1IzQjj9)
-     * @param n
-     * @param k
-     * @return
-     */
-    private static Vector<String> getAllCombinations(long n, long k, String padding){
-
-        Vector<String> combinations = new Vector<String>();
-
-        long x = (long)(Math.pow(2, k) - 1); //+ (int)(Math.pow(2, n) - 1);  // initialize x
-        long count = 1;// x is the first combination
-        long u = 0, v = 0, y = 0;
-
-        while(count <= combinations(n, k)){
-
-            combinations.add(String.format(padding, Long.parseLong(Long.toBinaryString(x))));
-
-            u = x & -x;
-            v = x + u;
-            y = v + (((v^x)/u)>>2);
-            x = y;
-
-            count++;
-        }
-
-        return combinations;
-    }
-
-    private static void printStringVector(Vector<String> vector){
-
-        for(int i=0; i<vector.size(); i++){
-
-            System.out.println(vector.elementAt(i));
-        }
-    }
-
-    private static long combinations(long n, long k){
-
-        return factorial(n)/(factorial(k) * factorial(n - k));
-    }
-
-    private static long factorial(long n) {
-
-        long fact = 1;
-        for (int i = 1; i <= n; i++) {
-            fact *= i;
-        }
-
-        return fact;
+        catch(FileNotFoundException fnfe)   { fnfe.printStackTrace(); }
+        catch(IOException ioe)              { ioe.printStackTrace(); }
     }
 }

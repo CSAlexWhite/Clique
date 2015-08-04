@@ -1,0 +1,47 @@
+INITIAL GENERATION
+Average Fitness: 0.1
+Standard Deviation: 0.05
+Maximum Fitness: 0.56
+Minimum Fitness: 0
+Range: 0.56
+
+==================================
+Generation 1 at Tue Aug 04 11:32:04 EDT 2015
+Average Fitness: 0.22
+Standard Deviation: 0.08
+Maximum Fitness: 0.54
+Minimum Fitness: 0.05
+Range: 0.49
+Best Chromosome: 00000000010000000000010011011111000000000100000010 having fitness: 0.56
+==================================
+Generation 2 at Tue Aug 04 11:32:04 EDT 2015
+Average Fitness: 0.33
+Standard Deviation: 0.09
+Maximum Fitness: 0.76
+Minimum Fitness: 0.12
+Range: 0.63
+Best Chromosome: 00000000000010000100000111111111000000000000000000 having fitness: 0.76
+==================================
+Generation 3 at Tue Aug 04 11:32:04 EDT 2015
+Average Fitness: 0.44
+Standard Deviation: 0.11
+Maximum Fitness: 0.85
+Minimum Fitness: 0.18
+Range: 0.67
+Best Chromosome: 00000000010000000000011111110111000000000000000000 having fitness: 0.85
+==================================
+Generation 4 at Tue Aug 04 11:32:04 EDT 2015
+Average Fitness: 0.56
+Standard Deviation: 0.11
+Maximum Fitness: 0.9
+Minimum Fitness: 0.2
+Range: 0.7
+Best Chromosome: 00000000000000000000111111111110000000000000000000 having fitness: 0.9
+==================================
+Generation 5 at Tue Aug 04 11:32:04 EDT 2015
+Average Fitness: 0.61
+Standard Deviation: 0.1
+Maximum Fitness: 1
+Minimum Fitness: 0.32
+Range: 0.67
+Best Chromosome: 00000000000000000000011111111111000000000000000000 having fitness: 1

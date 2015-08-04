@@ -53,6 +53,8 @@ public class Graph {
                     matrix[i][j] = Byte.parseByte(lineToParse.nextToken());
                 }
             }
+
+            inFile.close();
         }
 
         catch(FileNotFoundException fnfe)   { fnfe.printStackTrace(); }

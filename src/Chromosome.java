@@ -44,7 +44,7 @@ public class Chromosome implements Comparable<Chromosome>{
     }
 
     /**
-     * If type 1: Iterates through the string and switches random bits with probability p
+     * Iterates through the string and switches random bits with probability p
      * @param p the mutation rate
      * @return
      */

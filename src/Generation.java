@@ -1,9 +1,6 @@
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.util.Iterator;
-import java.util.Random;
-import java.util.TreeSet;
-import java.util.Vector;
+import java.util.*;
 
 /**
  * Created by Alex on 8/1/2015.
@@ -50,7 +47,6 @@ public class Generation {
         int count = 0, roll = 0;
         while(parents.size() < previous.size*((double)crossoverRate/100)){
 
-            //System.out.println("Selecting.");
             while(it.hasNext()){
 
                 candidate = it.next();
@@ -89,6 +85,7 @@ public class Generation {
         }
 
         best = set.first();
+        printStatistics();
     }
 
     public void populate(){
@@ -99,23 +96,66 @@ public class Generation {
         }
     }
 
-    public String calculateStatistics(){
+
+    double avgFitness;
+    double stdDeviation;
+    double max;
+    double min;
+    double range;
+
+    public String printStatistics(){
+
+        Chromosome toMeasure;
 
         double sum = 0.0;
 
         Iterator<Chromosome> it = set.iterator();
         while(it.hasNext()){
 
-            Chromosome toMeasure = it.next();
+            toMeasure = it.next();
             sum += toMeasure.fitness;
         }
 
-        double avgFitness = sum/set.size();
+        avgFitness = sum/set.size();
 
         DecimalFormat df = new DecimalFormat("##.##");
         df.setRoundingMode(RoundingMode.DOWN);
-        return df.format(avgFitness);
+        df.format(avgFitness);
+
+        sum = 0.0;
+        it = set.iterator();
+        while(it.hasNext()){
+
+            toMeasure = it.next();
+            sum += (toMeasure.fitness - avgFitness) * (toMeasure.fitness - avgFitness);
+        }
+
+        stdDeviation = Math.sqrt(sum / set.size());
+
+        max = 0.0;
+        min = 1.0;
+
+        it = set.iterator();
+        while(it.hasNext()) {
+
+            toMeasure = it.next();
+
+            if (toMeasure.fitness > max) max = toMeasure.fitness;
+            if (toMeasure.fitness < min) min = toMeasure.fitness;
+        }
+
+        range = max - min;
+
+        String output = "";
+        output += ("Average Fitness: " + df.format(avgFitness));
+        output += ("\nStandard Deviation: " + df.format(stdDeviation));
+        output += ("\nMaximum Fitness: " + df.format(max));
+        output += ("\nMinimum Fitness: " + df.format(min));
+        output += ("\nRange: " + df.format(range));
+
+        return output;
     }
+
 
     public void print(){
 
