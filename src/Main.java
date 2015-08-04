@@ -25,10 +25,14 @@ public class Main {
     public static void main(String[] args) {
 
         int n;
-        int k = 3;
-        int generationSize = 10;
+        int k = 11;
+        int numGenerations = 100;
+        int generationSize = 1000;
 
-        Graph testGraph = new Graph("Graph1.txt");
+        int crossoverRate = 3;
+        int MutationRate = 1;
+
+        Graph testGraph = new Graph("Graph3.txt");
         n = testGraph.size;
         testGraph.print();
         System.out.println();
@@ -39,16 +43,21 @@ public class Main {
         System.out.println("Average Fitness: " + start.calculateStatistics());
         System.out.print("Best Chromosome: " + start.best.genotype);
         System.out.println(" having fitness: " + start.best.fitness());
-        Generation next = new Generation(start, 100, 100);
-        for(int i = 1; i < 100; i++){
+        Generation next = new Generation(start, crossoverRate, MutationRate);
+
+        //for(int i = 1; i < numGenerations; i++){
+        int i=1;
+        while(next.best.fitness < 1){
 
             System.out.println("==================================");
-            System.out.println("Generation " + i + " at " + new Date(System.currentTimeMillis()));
-            next = new Generation(next, 3, 1);
+            System.out.println("Generation " + i++ + " at " + new Date(System.currentTimeMillis()));
+            next = new Generation(next, crossoverRate, MutationRate);
             System.out.println("Average Fitness: " + next.calculateStatistics());
             System.out.print("Best Chromosome: " + next.best.genotype);
             System.out.println(" having fitness: " + next.best.fitness());
         }
+
+        System.out.println("FINISHED");
     }
 
     private static void readParameters(){

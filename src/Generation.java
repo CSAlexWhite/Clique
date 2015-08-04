@@ -1,3 +1,5 @@
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.TreeSet;
@@ -37,26 +39,26 @@ public class Generation {
         this.parentGraph = previous.parentGraph;
         randNum = new Random(System.currentTimeMillis());
 
+
+        /* SELECTION */
         Vector<Chromosome> parents = new Vector<Chromosome>();
         set = new TreeSet<Chromosome>();
-        // choose parents
 
         // start at the top of the list, roll the dice, if exceeds crossover rate, select, remove it and add it to parents list
         Iterator<Chromosome> it = previous.set.iterator();
-
-        int count = 0, iter = 0, roll = 0;
-
+        Chromosome candidate;
+        int count = 0, roll = 0;
         while(parents.size() < previous.size*((double)crossoverRate/100)){
 
             //System.out.println("Selecting.");
             while(it.hasNext()){
 
-                iter++;
-                Chromosome candidate = it.next();
+                candidate = it.next();
+
+                if(parents.contains(candidate)) break;
 
                 roll = randomInt(0, 100);
-
-                if(roll > 0){//(100 - crossoverRate)){
+                if(roll > (100 - crossoverRate)){
 
                     parents.add(candidate);
                     previous.set.remove(candidate);
@@ -67,11 +69,10 @@ public class Generation {
             }
         }
 
+        /* CROSSOVER */
         Chromosome parent1, parent2;
-
         while(set.size() < previous.size){
 
-            //System.out.println("Crossing Over");
             parent1 = parents.elementAt(randomInt(0, parents.size() - 1));
             parent2 = parents.elementAt(randomInt(0, parents.size() - 1));
 
@@ -79,11 +80,10 @@ public class Generation {
         }
 
 
-        // mutate all those offspring
+        /* MUTATION */
         it = set.iterator();
         while(it.hasNext()){
 
-            //System.out.println("Mutating");
             Chromosome toMutate = it.next();
             toMutate.mutate(mutationRate);
         }
@@ -99,7 +99,7 @@ public class Generation {
         }
     }
 
-    public double calculateStatistics(){
+    public String calculateStatistics(){
 
         double sum = 0.0;
 
@@ -112,7 +112,9 @@ public class Generation {
 
         double avgFitness = sum/set.size();
 
-        return avgFitness;
+        DecimalFormat df = new DecimalFormat("##.##");
+        df.setRoundingMode(RoundingMode.DOWN);
+        return df.format(avgFitness);
     }
 
     public void print(){

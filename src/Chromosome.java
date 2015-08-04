@@ -44,7 +44,7 @@ public class Chromosome implements Comparable<Chromosome>{
     }
 
     /**
-     * If type 1: Iterates through the string and switches neighboring bits with probability p
+     * If type 1: Iterates through the string and switches random bits with probability p
      * @param p the mutation rate
      * @return
      */
@@ -53,16 +53,19 @@ public class Chromosome implements Comparable<Chromosome>{
         StringBuilder tempString = new StringBuilder(genotype);  //TODO can improve complexity here
 
             char temp1, temp2;
+            int roll, randPosition;
 
             for(int i = 0; i<length; i++){
 
-                if(randomInt(0, 100) < p){
+                roll = randomInt(0, 100);
+                if(roll < p){
 
+                    randPosition = randomInt(0, length);
                     temp1 = tempString.charAt(i);
-                    temp2 = tempString.charAt((i+1)%length);
+                    temp2 = tempString.charAt((i + randPosition)%length);
 
                     tempString.setCharAt(i, temp2);
-                    tempString.setCharAt((i+1)%length, temp1);
+                    tempString.setCharAt((i + randPosition)%length, temp1);
                 }
             }
 
@@ -129,8 +132,8 @@ public class Chromosome implements Comparable<Chromosome>{
 
         if(other.fitness == this.fitness){
 
-            if(Integer.parseInt(other.genotype, 2) < Integer.parseInt(this.genotype, 2)) return -1;
-            if(Integer.parseInt(other.genotype, 2) > Integer.parseInt(this.genotype, 2)) return 1;
+            if(Long.parseLong(other.genotype, 2) < Long.parseLong(this.genotype, 2)) return -1;
+            if(Long.parseLong(other.genotype, 2) > Long.parseLong(this.genotype, 2)) return 1;
         }
 
         return 0;
@@ -146,12 +149,26 @@ public class Chromosome implements Comparable<Chromosome>{
     public boolean equals(Object obj) {
 
         //System.out.println("Testing Equality between " + this + " and " + obj );
+//        System.out.print(this.genotype + " =? " + ((Chromosome)obj).genotype);
 
-        if(!(obj instanceof Chromosome)) return false;
-        if(obj == this) return true;
+        if(!(obj instanceof Chromosome)){
 
-        if(this.genotype.equals(((Chromosome)obj).genotype)) return true;
+//            System.out.println(": NOT A CHROMOSOME");
+            return false;
+        }
+        if(obj == this){
 
+//            System.out.println(": YES");
+            return true;
+        }
+
+        if(this.genotype.equals(((Chromosome)obj).genotype)) {
+
+//            System.out.println(": YES");
+            return true;
+        }
+
+//        System.out.println(": NO");
         return false;
     }
 
